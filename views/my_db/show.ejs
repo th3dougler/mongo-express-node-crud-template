@@ -19,7 +19,9 @@
     <div class="card-action">
         <a class="btn" href="/my_db/">Index</a>
         <a class="btn" href="/my_db/<%= entry._id %>/edit">Edit</a>
-      
+        <form action="/my_db/<%= entry._id %>?_method=DELETE" method="POST">
+        <button class="btn" href="/my_db/<%= entry._id %>">Delete</button>
+        </form>
     </div>
   </div>
 <%- include('../partials/foot') %> 

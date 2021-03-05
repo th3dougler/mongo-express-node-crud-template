@@ -11,10 +11,7 @@ router.get('/:id', mydbCtrl.show);
 router.get('/:id/edit', mydbCtrl.edit);
 router.put('/:id', mydbCtrl.update);
 
-
-
-
-router.delete('/:id', mydbCtrl.index);
+router.delete('/:id', mydbCtrl.delete);
 
 
 

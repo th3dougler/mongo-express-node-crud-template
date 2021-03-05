@@ -48,10 +48,12 @@ async function edit(req, res, next) {
       res.status(400);
     } else {
       let resultObject = result.toObject();
-      
+
       resultObject.date_input = convertDateyyyyMMdd(resultObject.date_input);
-      resultObject.array_input = resultObject.array_input.reduce((acc,cur)=>acc+"\n"+cur)
-      
+      resultObject.array_input = resultObject.array_input.reduce(
+        (acc, cur) => acc + "\n" + cur
+      );
+
       res.render(`my_db/edit`, {
         title: "MyDB - Edit ",
         entry: resultObject,
@@ -76,19 +78,18 @@ function convertDateyyyyMMdd(d) {
 }
 
 async function update(req, res, next) {
-    //convert checkbox input from  "ON"/"" to boolean true/false
-    req.body.boolean_input = !!req.body.boolean_input;
+  //convert checkbox input from  "ON"/"" to boolean true/false
+  req.body.boolean_input = !!req.body.boolean_input;
 
-    //convert textarea newlines into js newlines
-    req.body.array_input = req.body.array_input.split("\r\n");
-    
-  try{
-  // const newEntry = await new CollectionTemplate(req.body);
-  await CollectionTemplate.findByIdAndUpdate(req.params.id,req.body);
-  res.redirect(`/my_db/${req.params.id}`)
-  }
-  catch(e){
-    console.log(e)
+  //convert textarea newlines into js newlines
+  req.body.array_input = req.body.array_input.split("\r\n");
+
+  try {
+    // const newEntry = await new CollectionTemplate(req.body);
+    await CollectionTemplate.findByIdAndUpdate(req.params.id, req.body);
+    res.redirect(`/my_db/${req.params.id}`);
+  } catch (e) {
+    console.log(e);
   }
 }
 
@@ -111,6 +112,11 @@ async function create(req, res, next) {
   });
 }
 function deleteEntry(req, res, next) {
-  console.log("delete");
-  res.end();
+  CollectionTemplate.findByIdAndRemove(req.params.id, function (err, docs) {
+    if (err) console.log(err);
+    else {
+      console.log("Deleted:", docs);
+      res.redirect("/my_db");
+    }
+  });
 }
