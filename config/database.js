@@ -3,8 +3,8 @@ mongoose.connect('mongodb://localhost/myDB', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
+    useFindAndModify: false,
 });
-
 const db = mongoose.connection;
 
 db.on('connected', function(){
