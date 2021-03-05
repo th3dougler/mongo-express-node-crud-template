@@ -1,0 +1,25 @@
+<%- include('../partials/head') %> 
+<div class="card">
+    <div class="card-content">
+      <span class="card-title">Show _id: <%= entry._id %> </span>
+      <ul>
+        <li>string_input: <%= entry.string_input %></li>
+        <li>number_input: <%= entry.number_input %></li>
+        <li>date_input: <%= entry.date_input %></li>
+        <li>array_input:
+          <blockquote>
+          <% entry.array_input.forEach(arrayItem =>{ %>
+            <p><%= arrayItem %> </p>
+            <% }) %> 
+          </blockquote>
+          </li>
+        <li>boolean_input: <%= entry.boolean_input %></li>
+      </ul>
+    </div>
+    <div class="card-action">
+        <a class="btn" href="/my_db/">Index</a>
+        <a class="btn" href="/my_db/<%= entry._id %>/edit">Edit</a>
+      
+    </div>
+  </div>
+<%- include('../partials/foot') %> 

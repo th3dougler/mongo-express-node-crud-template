@@ -1,0 +1,22 @@
+<%- include('../partials/head') %>
+<div class="container">
+  <div class="card">
+    <div class="card-content">
+      <span class="card-title">Edit</span>
+
+      <form action="/my_db" method="POST">
+        <span>String: </span> <input type="text" name="string_input" />
+        <span>Number: </span> <input type="number" name="number_input" />
+        <span>Date: </span></span><input type="date" name="date_input" />
+        <span>Array:</span> <textarea name="array_input"></textarea>
+        <label>
+            <input type="checkbox" name="boolean_input" />
+            <span>Boolean</span>    
+        </label>
+        </br>
+        <button class="btn" type="submit">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
+<%- include('../partials/foot') %>
