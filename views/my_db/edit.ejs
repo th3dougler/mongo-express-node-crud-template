@@ -7,7 +7,7 @@
       <form action="/my_db/<%= entry._id %>/?_method=PUT" method="POST">
         <span>String: </span> <input type="text" name="string_input" value="<%= entry.string_input %>" />
         <span>Number: </span> <input type="number" name="number_input" value="<%= entry.number_input %>" />
-        <span>Date: </span></span><input type="date" name="date_input" placeholder="yyyy-MM-dd" value="<%= entry.date_input %>" />
+        <span>Date: </span></span><input type="text" class="datepicker" name="date_input" placeholder="yyyy-MM-dd" value="<%= entry.date_input %>" />
         <span>Array:</span> <textarea name="array_input"><%= entry.array_input %> </textarea>
         <label>
             <input type="checkbox" name="boolean_input" <%= entry.boolean_input? "checked" : ""%> />
@@ -19,4 +19,10 @@
     </div>
   </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var elems = document.querySelectorAll('.datepicker');
+      var instances = M.Datepicker.init(elems);
+    });
+  </script>
 <%- include('../partials/foot') %>

@@ -7,7 +7,7 @@
       <form action="/my_db" method="POST">
         <span>String: </span> <input type="text" name="string_input" />
         <span>Number: </span> <input type="number" name="number_input" />
-        <span>Date: </span></span><input type="date" placeholder="yyyy-MM-dd" name="date_input" />
+        <span>Date: </span><input type="text" class="datepicker" name="date_input" />
         <span>Array:</span> <textarea name="array_input"></textarea>
         <label>
             <input type="checkbox" name="boolean_input" />
@@ -19,4 +19,11 @@
     </div>
   </div>
 </div>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var elems = document.querySelectorAll('.datepicker');
+    var instances = M.Datepicker.init(elems);
+  });
+</script>
+
 <%- include('../partials/foot') %>

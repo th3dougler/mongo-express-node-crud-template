@@ -94,11 +94,14 @@ async function update(req, res, next) {
 }
 
 async function create(req, res, next) {
+  
+  //convert textarea newlines into js newlines
+  req.body.array_input = req.body.array_input.split("\r\n");
+  
   //convert checkbox input from  "ON"/"" to boolean true/false
   req.body.boolean_input = !!req.body.boolean_input;
 
-  //convert textarea newlines into js newlines
-  req.body.array_input = req.body.array_input.split("\r\n");
+  
 
   const newEntry = new CollectionTemplate(req.body);
   await newEntry.save(function (err, success) {
@@ -106,11 +109,13 @@ async function create(req, res, next) {
       console.log("Error: ", err);
       res.status(400);
     } else {
-      console.log("Success:", result);
+      console.log("Success:", success);
       res.redirect("/my_db");
     }
   });
 }
+
+
 function deleteEntry(req, res, next) {
   CollectionTemplate.findByIdAndRemove(req.params.id, function (err, docs) {
     if (err) console.log(err);
