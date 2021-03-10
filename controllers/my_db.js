@@ -9,19 +9,23 @@ module.exports = {
   create,
   delete: deleteEntry,
 };
+function renderError(err) {
+  res.render("error", {
+    message: "my_db controller",
+    error: err,
+  });
+}
 
 async function index(req, res, next) {
-  await CollectionTemplate.find({}, function (err, result) {
-    if (err) {
-      console.log(err);
-      res.status(400);
-    } else {
-      res.render("my_db/index", {
-        title: "MyDB - Index ",
-        array: result,
-      });
-    }
-  });
+  try {
+    let result = await CollectionTemplate.find({});
+    res.render("my_db/index", {
+      title: "MyDB - Index ",
+      array: result,
+    });
+  } catch (err) {
+    renderError(err);
+  }
 }
 
 function newEntry(req, res, next) {
@@ -29,37 +33,33 @@ function newEntry(req, res, next) {
 }
 
 async function show(req, res, next) {
-  await CollectionTemplate.findById(req.params.id, function (err, result) {
-    if (err) {
-      console.log(err);
-      res.status(400);
-    } else {
-      res.render("my_db/show", {
-        title: "MyDB - Show ",
-        entry: result,
-      });
-    }
-  });
+  try {
+    let result = await CollectionTemplate.findById(req.params.id);
+    res.render("my_db/show", {
+      title: "MyDB - Show ",
+      entry: result,
+    });
+  } catch (err) {
+    renderError(err);
+  }
 }
 async function edit(req, res, next) {
-  await CollectionTemplate.findById(req.params.id, function (err, result) {
-    if (err) {
-      console.log(err);
-      res.status(400);
-    } else {
-      let resultObject = result.toObject();
+  try {
+    let result = await CollectionTemplate.findById(req.params.id);
+    let resultObject = result.toObject();
 
-      resultObject.date_input = convertDateyyyyMMdd(resultObject.date_input);
-      resultObject.array_input = resultObject.array_input.reduce(
-        (acc, cur) => acc + "\n" + cur
-      );
+    resultObject.date_input = convertDateyyyyMMdd(resultObject.date_input);
+    resultObject.array_input = resultObject.array_input.reduce(
+      (acc, cur) => acc + "\n" + cur
+    );
 
-      res.render(`my_db/edit`, {
-        title: "MyDB - Edit ",
-        entry: resultObject,
-      });
-    }
-  });
+    res.render(`my_db/edit`, {
+      title: "MyDB - Edit ",
+      entry: resultObject,
+    });
+  } catch (err) {
+    renderError(err);
+  }
 }
 //obviously this returns the date to acceptable HTML format
 function convertDateyyyyMMdd(d) {
@@ -78,50 +78,43 @@ function convertDateyyyyMMdd(d) {
 }
 
 async function update(req, res, next) {
+  try {
   //convert checkbox input from  "ON"/"" to boolean true/false
   req.body.boolean_input = !!req.body.boolean_input;
 
   //convert textarea newlines into js newlines
   req.body.array_input = req.body.array_input.split("\r\n");
 
-  try {
+  
     // const newEntry = await new CollectionTemplate(req.body);
     await CollectionTemplate.findByIdAndUpdate(req.params.id, req.body);
     res.redirect(`/my_db/${req.params.id}`);
-  } catch (e) {
-    console.log(e);
+  } catch (err) {
+    renderError(err);
   }
 }
 
 async function create(req, res, next) {
-  
-  //convert textarea newlines into js newlines
+ try{
+    //convert textarea newlines into js newlines
   req.body.array_input = req.body.array_input.split("\r\n");
-  
+
   //convert checkbox input from  "ON"/"" to boolean true/false
   req.body.boolean_input = !!req.body.boolean_input;
 
-  
-
   const newEntry = new CollectionTemplate(req.body);
-  await newEntry.save(function (err, success) {
-    if (err) {
-      console.log("Error: ", err);
-      res.status(400);
-    } else {
-      console.log("Success:", success);
-      res.redirect("/my_db");
-    }
-  });
+  await newEntry.save();
+  res.redirect("/my_db");
+} catch (err) {
+  renderError(err);
+}
 }
 
-
-function deleteEntry(req, res, next) {
-  CollectionTemplate.findByIdAndRemove(req.params.id, function (err, docs) {
-    if (err) console.log(err);
-    else {
-      console.log("Deleted:", docs);
-      res.redirect("/my_db");
-    }
-  });
+async function deleteEntry(req, res, next) {
+  try{
+    await CollectionTemplate.findByIdAndRemove(req.params.id);
+    res.redirect("/my_db");
+  } catch (err) {
+    renderError(err);
+  }
 }
