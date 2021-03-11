@@ -1,5 +1,17 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+        M.AutoInit();
+        
 
+        
+    })
+    if( '<%=flash.success %>' ){
+            M.toast({html: '<%=flash.success %>', classes: ' green rounded'});
+        } else if( '<%=flash.failure %>'){
+            M.toast({html: '<%=flash.failure %>', classes: ' red rounded'});
+        }
+</script>
 </body>
 
 </html>

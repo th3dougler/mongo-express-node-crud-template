@@ -9,22 +9,21 @@ module.exports = {
   create,
   delete: deleteEntry,
 };
-function renderError(err) {
-  res.render("error", {
-    message: "my_db controller",
-    error: err,
-  });
-}
 
 async function index(req, res, next) {
+  
   try {
     let result = await CollectionTemplate.find({});
     res.render("my_db/index", {
+      flash: req.flash(),
       title: "MyDB - Index ",
       array: result,
     });
   } catch (err) {
-    renderError(err);
+    res.render("error", {
+      message: "my_db controller",
+      error: err,
+    });
   }
 }
 
@@ -36,11 +35,15 @@ async function show(req, res, next) {
   try {
     let result = await CollectionTemplate.findById(req.params.id);
     res.render("my_db/show", {
+      flash: req.flash(),
       title: "MyDB - Show ",
       entry: result,
     });
   } catch (err) {
-    renderError(err);
+    res.render("error", {
+      message: "my_db controller",
+      error: err,
+    });
   }
 }
 async function edit(req, res, next) {
@@ -54,11 +57,15 @@ async function edit(req, res, next) {
     );
 
     res.render(`my_db/edit`, {
+      flash: req.flash(),
       title: "MyDB - Edit ",
       entry: resultObject,
     });
   } catch (err) {
-    renderError(err);
+    res.render("error", {
+      message: "my_db controller",
+      error: err,
+    });
   }
 }
 //obviously this returns the date to acceptable HTML format
@@ -88,9 +95,13 @@ async function update(req, res, next) {
   
     // const newEntry = await new CollectionTemplate(req.body);
     await CollectionTemplate.findByIdAndUpdate(req.params.id, req.body);
+    req.flash("success", "Success: Updated Document")
     res.redirect(`/my_db/${req.params.id}`);
   } catch (err) {
-    renderError(err);
+    res.render("error", {
+      message: "my_db controller",
+      error: err,
+    });
   }
 }
 
@@ -104,17 +115,23 @@ async function create(req, res, next) {
 
   const newEntry = new CollectionTemplate(req.body);
   await newEntry.save();
+  req.flash("success", "Success: Created new Document");
   res.redirect("/my_db");
 } catch (err) {
-  renderError(err);
+    req.flash("fail", "Error:"+err);
+    res.redirect("/my_db");
 }
 }
 
 async function deleteEntry(req, res, next) {
   try{
     await CollectionTemplate.findByIdAndRemove(req.params.id);
+    req.flash("success", "Success: Deleted a Document")
     res.redirect("/my_db");
   } catch (err) {
-    renderError(err);
+    res.render("error", {
+      message: "my_db controller",
+      error: err,
+    });
   }
 }
